@@ -1,7 +1,6 @@
 package com.chj.usercenter.service;
 
-import com.chj.springbootdemo.domain.User;
-import com.chj.springbootdemo.service.dto.UserDTO;
+import com.chj.usercenter.service.dto.UserDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,16 +12,16 @@ public interface UserService {
 
     UserDTO findById(Long id);
 
-    List<User> findAll();
+    List<UserDTO> findAll();
 
     UserDTO save(UserDTO userDTO);
 
-    void saveAll(List<User> list);
+    void saveAll(List<UserDTO> list);
 
     void deleteById(Long id);
 
-    void testTxPrivateLocal(User user);
-
-    void testTxPublicInterface(User user);
+//    void testTxPrivateLocal(UserDTO user);
+//
+//    void testTxPublicInterface(UserDTO user);
 
 }
