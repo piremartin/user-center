@@ -1,11 +1,11 @@
 package com.chj.usercenter.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.chj.springbootdemo.domain.User;
-import com.chj.springbootdemo.repository.UserRepository;
-import com.chj.springbootdemo.service.UserService;
-import com.chj.springbootdemo.service.dto.UserDTO;
-import com.chj.springbootdemo.service.mapper.UserMapper;
+import com.chj.usercenter.domain.UserE;
+import com.chj.usercenter.repository.UserRepository;
+import com.chj.usercenter.service.UserService;
+import com.chj.usercenter.service.dto.UserDTO;
+import com.chj.usercenter.service.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
         Long id = userDTO.getId();
         String name = userDTO.getName();
 
-        Specification<User> specification = (Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb)-> {
+        Specification<UserE> specification = (Root<UserE> root, CriteriaQuery<?> query, CriteriaBuilder cb)-> {
             List<Predicate> predicates = new ArrayList<>();
 
             if (id!=null){
@@ -77,49 +77,50 @@ public class UserServiceImpl implements UserService {
             Predicate[] array = new Predicate[predicates.size()];
             return query.where(predicates.toArray(array)).getRestriction();
         };
-        Page<User> entityPage = userRepository.findAll(specification, pageable);
+        Page<UserE> entityPage = userRepository.findAll(specification, pageable);
         List<UserDTO> dtoList = userMapper.toDTO(entityPage.getContent());
         return new PageImpl<>(dtoList, pageable, entityPage.getTotalElements());
     }
 
     @Override
-    public void saveAll(List<User> list) {
-        userRepository.saveAll(list);
+    public void saveAll(List<UserDTO> list) {
+//        userRepository.saveAll(list);
     }
 
 
     public UserDTO findById(Long id) {
 
 //        String key = Key_User+id;
-//        User user;
+//        UserE user;
 //        String value = stringRedisTemplate.opsForValue().get(key);
 //        if (StringUtils.isNotBlank(value)){
-//            user = JSON.parseObject(value, User.class);
+//            user = JSON.parseObject(value, UserE.class);
 //        }else {
-//            user = userRepository.findById(id).orElse(new User());
+//            user = userRepository.findById(id).orElse(new UserE());
 //            stringRedisTemplate.opsForValue().set(key, JSON.toJSONString(user));
 //        }
 
         String key = Key_Users;
 
-        User user = (User) opsForHash.get(key, String.valueOf(id));
+        UserE user = (UserE) opsForHash.get(key, String.valueOf(id));
         if (user==null){
             log.debug("redis中id={}的User不存在",id);
-            user = userRepository.findById(id).orElse(new User());
+            user = userRepository.findById(id).orElse(new UserE());
             log.debug("保存到redis:{}",user);
             opsForHash.put(key, String.valueOf(id), JSON.toJSONString(user));
         }
         return userMapper.toDTO(user);
     }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserDTO> findAll() {
+//        return userRepository.findAll();
+        return null;
     }
 
 
     public UserDTO save(UserDTO userDTO) {
-        User user = userMapper.toEntity(userDTO);
-        User save = userRepository.save(user);
+        UserE user = userMapper.toEntity(userDTO);
+        UserE save = userRepository.save(user);
 
         log.debug("保存到数据库后，同步保存到redis:{}",save);
 
@@ -135,18 +136,18 @@ public class UserServiceImpl implements UserService {
         opsForHash.delete(Key_Users, id);
     }
 
-    @Override
-    public void testTxPrivateLocal(User user) {
-        txPrivateLocal(user);
-    }
+//    @Override
+//    public void testTxPrivateLocal(UserE user) {
+//        txPrivateLocal(user);
+//    }
 
-    private void txPrivateLocal(User user) {
+    private void txPrivateLocal(UserE user) {
         userRepository.save(user);
     }
 
     //invoke本类中的
-    @Override
-    public void testTxPublicInterface(User user) {
-//        save(user);
-    }
+//    @Override
+//    public void testTxPublicInterface(UserE user) {
+////        save(user);
+//    }
 }

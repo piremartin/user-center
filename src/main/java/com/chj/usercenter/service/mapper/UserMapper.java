@@ -21,6 +21,6 @@ public interface UserMapper {
 
     List<UserVO> toVO(List<UserDTO> dtoList);
 
-    @Mapping(target = "createTime", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @Mapping(target = "createTime", source = "createTime", dateFormat = "yyyy-MM-dd HH:mm:ss")
     UserVO toVO(UserDTO dto);
 }

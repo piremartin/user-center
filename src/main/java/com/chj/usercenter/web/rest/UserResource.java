@@ -33,8 +33,8 @@ public class UserResource {
     @PostMapping("/save")
     public ResponseEntity<UserVO> save(@RequestBody UserVM vm) {
         UserDTO userDTO = userMapper.vmToDto(vm);
-        UserDTO saved = userService.save(userDTO);
-        UserVO userVO = userMapper.toVO(saved);
+        UserDTO savedDTO = userService.save(userDTO);
+        UserVO userVO = userMapper.toVO(savedDTO);
         return ResponseEntity.ok(userVO);
     }
 

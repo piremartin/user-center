@@ -22,5 +22,13 @@ public class UserE implements Serializable {
     @Column(name = "create_time")
     private LocalDateTime createTime;
 
+    public UserE(){
+
+    }
+
+    public UserE(String name){
+        this.name = name;
+    }
+
 
 }
